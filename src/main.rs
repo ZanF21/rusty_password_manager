@@ -53,9 +53,9 @@ fn init() {
     let gitignore = format!("{}/.gitignore", dir.clone());
     fs::write(gitignore, ".priv_key\n.pub_key\n.gitignore\n").unwrap();
 
+    print!("{}[2J", 27 as char);
     // Setup Encryption Keys
     loop {
-        print!("{}[2J", 27 as char);
         println!("Setting up Encryption Keys");
         println!("--------------------------");
         println!("1. Generate new ssh key (not implemented)");
@@ -85,6 +85,7 @@ fn init() {
                 break;
             }
             _ => {
+                print!("{}[2J", 27 as char);
                 println!("Invalid choice");
             }
         }
