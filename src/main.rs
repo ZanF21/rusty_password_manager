@@ -1,5 +1,6 @@
 use clap::Parser;
 use home::home_dir;
+use serde_json;
 use std::fs;
 
 /// Simple program to greet a person
@@ -30,6 +31,27 @@ fn main() {
     for _ in 0..args.count {
         println!("Hello, {}!", args.name);
     }
+}
+
+fn open_config() -> serde_json::Value {
+    let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
+    let config = format!("{}/config.json", dir.clone());
+    let config = fs::read_to_string(config).unwrap();
+    serde_json::from_str(&config).unwrap()
+}
+
+fn save_config(config: String) {
+    let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
+    let config_path = format!("{}/config.json", dir.clone());
+    fs::write(config_path, config).unwrap();
+}
+
+// add two key value pairs to config
+fn add_save_config(config: &mut serde_json::Value, priv_key_path: String, pub_key_path: String) {
+    config["priv_key_path"] = serde_json::Value::String(priv_key_path);
+    config["pub_key_path"] = serde_json::Value::String(pub_key_path);
+    let config = serde_json::to_string_pretty(&config).unwrap();
+    save_config(config);
 }
 
 fn init() {
@@ -77,7 +99,19 @@ fn init() {
                 break;
             }
             2 => {
-                println!("2 but not implimented");
+                let config = open_config();
+                
+                println!("Enter path to private key");
+                let mut priv_key_path = String::new();
+                std::io::stdin().read_line(&mut priv_key_path).unwrap();
+                let priv_key_path = priv_key_path.trim();
+                println!("Enter path to public key");
+                let mut pub_key_path = String::new();
+                std::io::stdin().read_line(&mut pub_key_path).unwrap();
+                let pub_key_path = pub_key_path.trim();
+                
+                add_save_config(&mut config.clone(), priv_key_path.to_string(), pub_key_path.to_string());
+
                 break;
             }
             3 => {
