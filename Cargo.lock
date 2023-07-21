@@ -262,17 +262,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4d5d9eb14b174ee9aa2ef96dc2b94637a2d4b6e7cb873c7e171f0c20c6cf3eac"
 
 [[package]]
-name = "password_manager"
-version = "0.1.0"
-dependencies = [
- "clap 4.3.16",
- "clap_generate",
- "home",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -301,6 +290,17 @@ dependencies = [
  "libc",
  "linux-raw-sys",
  "windows-sys",
+]
+
+[[package]]
+name = "rusty_password_manager"
+version = "0.1.0"
+dependencies = [
+ "clap 4.3.16",
+ "clap_generate",
+ "home",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

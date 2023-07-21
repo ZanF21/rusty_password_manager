@@ -1,23 +1,82 @@
-use clap::Parser;
+use clap::{Args, Parser, Subcommand};
+
+/// Here's my app!
+#[derive(Debug, Parser)]
+#[clap(name = "my-app", version)]
+pub struct App {
+    #[clap(flatten)]
+    global_opts: GlobalOpts,
+
+    #[clap(subcommand)]
+    command: Command,
+}
+
+#[derive(Debug, Subcommand)]
+enum Command {
+    /// Help message for read.
+    Read {
+        /// An example option
+        #[clap(long, short = 'o')]
+        example_opt: bool,
+
+        /// The path to read from
+        path: Utf8PathBuf,
+        // (can #[clap(flatten)] other argument structs here)
+    },
+    /// Help message for write.
+    Write(WriteArgs),
+    // ...other commands (can #[clap(flatten)] other enum variants here)
+}
+
+#[derive(Debug, Args)]
+struct GlobalOpts {
+    /// Color
+    #[clap(long, global = true, default_value_t = Color::Auto)]
+    color: Color,
+
+    /// Verbosity level (can be specified multiple times)
+    #[clap(long, short, global = true)]
+    verbose: usize,
+    //... other global options
+}
+
+#[derive(Clone, Debug, ArgEnum)]
+enum Color {
+    Always,
+    Auto,
+    Never,
+}
+
+
+use clap::{Parser, Arg,Subcommand};
 pub mod add;
 pub mod init;
 pub mod show;
 
-/// Simple program to greet a person
+/// Simple program to store passwords
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(
+    author = "Rizan",
+    version,
+    about = "A Rusty but Trusty Password Manager",
+    long_about = "Don't got time for this sadly .... move along ... come here next time :)"
+)]
 struct Args {
     ///Perform initialization tasks for Password Manager to run
     #[arg(long, action = clap::ArgAction::SetTrue, default_value = "false")]
     init: bool,
 
     ///Add a new password (does not store metadata .... just the password and the name of the service the password is for)
-    #[arg(short, long, action = clap::ArgAction::SetTrue, default_value = "false")]
+    #[clap()]
+    #[arg(long, action = clap::ArgAction::SetTrue, default_value = "false")]
     add: bool,
 
     ///Shows the password for a given service
     #[arg(short, long, action = clap::ArgAction::SetTrue, default_value = "false")]
     show: bool,
+
+    #[arg(action = clap::ArgAction::SetTrue, default_value = "false")]
+    is_pokemon: bool,
 }
 
 impl Args {

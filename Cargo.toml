@@ -1,5 +1,5 @@
 [package]
-name = "password_manager"
+name = "rusty_password_manager"
 version = "0.1.0"
 edition = "2021"
 
