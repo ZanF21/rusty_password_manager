@@ -3,6 +3,15 @@ use serde_json;
 use std::fs;
 use std::io::{self, Write};
 
+/// check if init has already been run and the directory exists
+pub fn check_init() -> bool {
+    let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
+    if fs::metadata(&dir).is_ok() {
+        return true;
+    }
+    false
+}
+
 fn create_open_config() -> serde_json::Value {
     let config = format!(
         r#"{{
@@ -16,7 +25,7 @@ fn create_open_config() -> serde_json::Value {
 
 fn save_config(config: String) {
     let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
-    let config_path = format!("{}/config.json", dir.clone());
+    let config_path = format!("{}/.config.json", dir.clone());
     fs::write(config_path, config).unwrap();
 }
 
