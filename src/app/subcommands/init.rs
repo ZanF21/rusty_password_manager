@@ -62,7 +62,7 @@ pub fn init() {
     let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
 
     loop {
-        if fs::metadata(&dir).is_ok() {
+        if check_init() {
             println!("Directory already exists: {}", dir);
             print!("Do you want to overwrite it? (y/N): ");
             io::stdout().flush().expect("Couldn't flush stdout");
