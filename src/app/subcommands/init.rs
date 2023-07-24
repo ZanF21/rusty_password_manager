@@ -3,7 +3,7 @@ use serde_json;
 use std::fs;
 use std::io::{self, Write};
 
-/// check if init has already been run and the directory exists
+/// Check if init has already been run and the directory exists
 pub fn check_init() -> bool {
     let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
     if fs::metadata(&dir).is_ok() {
@@ -12,7 +12,9 @@ pub fn check_init() -> bool {
     false
 }
 
-fn create_open_config() -> serde_json::Value {
+/// Create and open config file
+fn create_and_open_config() -> serde_json::Value {
+    // might be a round about way of doing this but it works
     let config = format!(
         r#"{{
         "priv_key_path": "",
@@ -23,13 +25,14 @@ fn create_open_config() -> serde_json::Value {
     config
 }
 
+/// Save config to file
 fn save_config(config: String) {
     let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
     let config_path = format!("{}/.config.json", dir.clone());
     fs::write(config_path, config).unwrap();
 }
 
-// add two key value pairs to config
+/// Add two key value pairs to config
 fn add_save_config(config: &mut serde_json::Value, priv_key_path: String, pub_key_path: String) {
     config["priv_key_path"] = serde_json::Value::String(priv_key_path);
     config["pub_key_path"] = serde_json::Value::String(pub_key_path);
@@ -37,8 +40,9 @@ fn add_save_config(config: &mut serde_json::Value, priv_key_path: String, pub_ke
     save_config(config);
 }
 
+/// Ask user for private and public key paths and save them to config
 fn encryp_2() {
-    let config = create_open_config();
+    let config = create_and_open_config();
     print!("Enter private key path   (default: ~/.ssh/id_ed25519): ");
     io::stdout().flush().expect("Couldn't flush stdout");
     let mut priv_key_path = String::new();
@@ -58,6 +62,9 @@ fn encryp_2() {
     add_save_config(&mut config.clone(), priv_key_path, pub_key_path);
 }
 
+/// ### Initialize Password Manager
+/// - Create directories and config file
+/// - Store SSH keys path in config file
 pub fn init() {
     let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
 
@@ -68,11 +75,11 @@ pub fn init() {
             io::stdout().flush().expect("Couldn't flush stdout");
             let mut overwrite = String::new();
             std::io::stdin().read_line(&mut overwrite).unwrap();
-            let overwrite = overwrite.trim();
-            if overwrite == "y" || overwrite == "Y" {
+            let overwrite = overwrite.trim().to_lowercase();
+            if overwrite == "y" {
                 fs::remove_dir_all(&dir).unwrap();
                 break;
-            } else if overwrite == "N" || overwrite == "n" {
+            } else if overwrite == "n" {
                 println!("Exiting...");
                 return;
             }
@@ -86,13 +93,14 @@ pub fn init() {
     fs::create_dir_all(&completions_path).unwrap();
 
     print!("{}[2J", 27 as char);
-    // Setup Encryption Keys
     loop {
         println!("Setting up Encryption Keys");
         println!("--------------------------");
         println!("1. Generate new ssh key (not implemented)");
         println!("2. Use existing ssh key");
         println!("3. Enter ssh key manually (not implemented)");
+        print!("Enter choice: ");
+        io::stdout().flush().expect("Couldn't flush stdout");
 
         let mut choice = String::new();
         std::io::stdin().read_line(&mut choice).unwrap();
@@ -135,6 +143,13 @@ pub fn init() {
         .output()
         .expect("failed to execute process");
 
-    println!("created directory: {}", dir);
+    let git_commit = format!("cd {} && git commit -m 'initial commit'", dir.clone());
+    std::process::Command::new("sh")
+        .arg("-c")
+        .arg(git_commit)
+        .output()
+        .expect("failed to execute process");
+    
+    println!("Created directory: {}", dir);
     println!();
 }
