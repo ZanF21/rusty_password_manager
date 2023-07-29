@@ -5,7 +5,7 @@ use std::path::Path;
 /// Checks if password already exists
 fn already_exists(service_name: String) -> bool {
     let file_path = format!(
-        "{}/.rusty-pass-manager/{}",
+        "{}/.rusty-pass-manager/{}/password",
         home_dir().unwrap().display(),
         service_name
     );

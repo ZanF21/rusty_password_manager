@@ -149,7 +149,7 @@ pub fn init() {
         .arg(git_commit)
         .output()
         .expect("failed to execute process");
-    
+
     println!("Created directory: {}", dir);
     println!();
 }
