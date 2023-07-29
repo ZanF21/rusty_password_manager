@@ -1,6 +1,6 @@
 use clap::Parser;
 mod subcommands;
-use subcommands::{add, init, show, Subcommands};
+use subcommands::{add, init, copy, Subcommands};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -25,12 +25,16 @@ pub fn run() {
             println!("Initializing Password Manager");
             init::init();
         }
+
         Subcommands::Add {
             service_name,
             password,
         } => add::add(service_name, password),
-        Subcommands::Show { service_name } => {
-            show::show(service_name);
+
+        Subcommands::Copy {
+            service_name,
+        } => {
+            copy::copy(service_name);
         }
     }
 }
