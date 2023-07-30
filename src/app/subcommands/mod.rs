@@ -1,7 +1,8 @@
 use clap::Parser;
 pub mod add;
-pub mod init;
 pub mod copy;
+pub mod init;
+pub mod show_all;
 
 #[derive(Parser, Debug)]
 pub enum Subcommands {
@@ -24,5 +25,6 @@ pub enum Subcommands {
         service_name: String,
     },
 
-
+    /// View all Services whose passwords are stored
+    ShowAll,
 }
