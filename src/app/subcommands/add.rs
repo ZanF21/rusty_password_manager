@@ -19,7 +19,7 @@ fn already_exists(service_name: String) -> bool {
 /// - Add a new password to the password manager
 pub fn add(service_name: String, password: String) {
     if already_exists(service_name.clone()) {
-        println!("Password for {} already exists", service_name.clone());
+        println!("Password for {} already exists", service_name);
         // maybe ask for edit
         return;
     }

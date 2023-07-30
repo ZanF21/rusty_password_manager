@@ -1,8 +1,7 @@
 use clap::Parser;
 mod subcommands;
-use subcommands::{add, copy, init, Subcommands};
-
-use self::subcommands::show_all;
+use passwords;
+use subcommands::{add, copy, init, show_all, Subcommands};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -35,6 +34,28 @@ pub fn run() {
         }
         Subcommands::ShowAll => {
             show_all::show_all();
+        }
+        Subcommands::Create {
+            service_name,
+            no_lowercase,
+            no_uppercase,
+            no_numbers,
+            no_symbols,
+            length,
+            exclude_similar,
+        } => {
+            let password = passwords::PasswordGenerator::new()
+                .exclude_similar_characters(exclude_similar)
+                .length(length)
+                .symbols(!no_symbols)
+                .numbers(!no_numbers)
+                .lowercase_letters(!no_lowercase)
+                .uppercase_letters(!no_uppercase)
+                .generate_one()
+                .unwrap();
+
+            add::add(service_name.clone(), password);
+            copy::copy(service_name);
         }
     }
 }
