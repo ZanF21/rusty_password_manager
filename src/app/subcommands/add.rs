@@ -1,25 +1,12 @@
+use super::common;
 use home::home_dir;
 use std::io::Write;
-use std::path::Path;
-
-/// Checks if password already exists
-fn already_exists(service_name: String) -> bool {
-    let file_path = format!(
-        "{}/.rusty-pass-manager/{}/password",
-        home_dir().unwrap().display(),
-        service_name
-    );
-    if Path::new(&file_path).exists() {
-        return true;
-    }
-    false
-}
 
 /// ### Add a new password
 /// - Add a new password to the password manager
 pub fn add(service_name: String, password: String) {
     let mut update = false;
-    if already_exists(service_name.clone()) {
+    if common::already_exists(service_name.clone()) {
         println!("Password for {} already exists", service_name);
         loop {
             print!("Do you want to overwrite it? (y/N): ");

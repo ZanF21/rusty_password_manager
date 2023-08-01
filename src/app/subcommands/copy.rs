@@ -1,21 +1,8 @@
+use super::common;
 use home::home_dir;
-use std::path::Path;
-
-fn already_exists(service_name: &String) -> bool {
-    let file_path = format!(
-        "{}/.rusty-pass-manager/{}/password",
-        home_dir().unwrap().display(),
-        service_name
-    );
-    if Path::new(&file_path).exists() {
-        return true;
-    }
-    false
-}
 
 pub fn copy(service_name: String) {
-    if !already_exists(&service_name) {
-        // print the pass on screen and copy to clip board
+    if !common::already_exists(service_name.clone()) {
         println!("Password for {} does not exist", service_name);
     } else {
         std::process::Command::new("xclip")

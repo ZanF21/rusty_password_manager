@@ -1,7 +1,6 @@
 use clap::Parser;
 mod subcommands;
-use passwords;
-use subcommands::{add, copy, init, show_all, Subcommands};
+use subcommands::{add, copy, create, init, show_all, Subcommands};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -44,18 +43,15 @@ pub fn run() {
             length,
             exclude_similar,
         } => {
-            let password = passwords::PasswordGenerator::new()
-                .exclude_similar_characters(exclude_similar)
-                .length(length)
-                .symbols(!no_symbols)
-                .numbers(!no_numbers)
-                .lowercase_letters(!no_lowercase)
-                .uppercase_letters(!no_uppercase)
-                .generate_one()
-                .unwrap();
-
-            add::add(service_name.clone(), password);
-            copy::copy(service_name);
+            create::create(
+                service_name,
+                no_lowercase,
+                no_uppercase,
+                no_numbers,
+                no_symbols,
+                length,
+                exclude_similar,
+            );
         }
     }
 }
