@@ -6,7 +6,7 @@ use std::io::{self, Write};
 /// Check if init has already been run and the directory exists
 pub fn check_init() -> bool {
     let dir = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
-    if fs::metadata(&dir).is_ok() {
+    if fs::metadata(dir).is_ok() {
         return true;
     }
     false
@@ -15,13 +15,11 @@ pub fn check_init() -> bool {
 /// Create and open config file
 fn create_and_open_config() -> serde_json::Value {
     // might be a round about way of doing this but it works
-    let config = format!(
-        r#"{{
+    let config = r#"{{
         "priv_key_path": "",
         "pub_key_path": ""
-        }}"#
-    );
-    let config: serde_json::Value = serde_json::from_str(&config).unwrap();
+        }}"#;
+    let config: serde_json::Value = serde_json::from_str(config).unwrap();
     config
 }
 
@@ -48,7 +46,7 @@ fn encryp_2() {
     let mut priv_key_path = String::new();
     std::io::stdin().read_line(&mut priv_key_path).unwrap();
     priv_key_path = priv_key_path.trim().to_string();
-    if priv_key_path == "" {
+    if priv_key_path.is_empty() {
         priv_key_path = format!("{}/.ssh/id_ed25519", home_dir().unwrap().display());
     }
     print!("Enter public key path    (default: ~/.ssh/id_ed25519.pub): ");
@@ -56,7 +54,7 @@ fn encryp_2() {
     let mut pub_key_path = String::new();
     std::io::stdin().read_line(&mut pub_key_path).unwrap();
     pub_key_path = pub_key_path.trim().to_string();
-    if pub_key_path == "" {
+    if pub_key_path.is_empty() {
         pub_key_path = format!("{}/.ssh/id_ed25519.pub", home_dir().unwrap().display());
     }
     add_save_config(&mut config.clone(), priv_key_path, pub_key_path);

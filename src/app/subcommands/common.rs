@@ -19,6 +19,6 @@ mod tests {
     use super::*;
     #[test]
     fn test_already_exists() {
-        assert_eq!(already_exists("test".to_string()), false);
+        assert!(!already_exists("test".to_string()));
     }
 }
