@@ -29,7 +29,7 @@ fn ask_root_dir_location() -> String {
         .read_line(&mut root_dir)
         .expect("Couldn't read input");
     root_dir = root_dir.trim().to_string();
-    if root_dir == "" {
+    if root_dir.is_empty() {
         root_dir = format!("{}/.rusty", home::home_dir().unwrap().display());
     }
     root_dir
@@ -55,7 +55,10 @@ fn ask_master_password() -> String {
 }
 
 pub fn gen_conf() {
-    let config_path = format!("{}/.rusty/.config.json", home::home_dir().unwrap().display());
+    let config_path = format!(
+        "{}/.rusty/.config.json",
+        home::home_dir().unwrap().display()
+    );
 
     // Removing the config if thats what is required
     if config_already_exists(config_path.clone()) {
