@@ -2,6 +2,7 @@ use home::home_dir;
 use serde_json;
 use std::fs;
 use std::io::{self, Write};
+mod conf;
 
 /// Check if init has already been run and the directory exists
 pub fn check_init() -> bool {
