@@ -1,6 +1,7 @@
 use clap::Parser;
 mod subcommands;
-use subcommands::{add, copy, create, init, show_all, Subcommands};
+use subcommands::{add, copy, create, show_all, Subcommands};
+pub mod conf;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -20,7 +21,7 @@ pub fn run() {
     match application.subcmd {
         Subcommands::Init => {
             println!("Initializing Password Manager");
-            init::init();
+            conf::gen_conf();
         }
 
         Subcommands::Add {

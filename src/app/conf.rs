@@ -11,13 +11,6 @@ fn config_already_exists(path: String) -> bool {
     false
 }
 
-#[allow(dead_code)]
-pub fn auth_user(master_password: String) -> bool {
-    print!("Confirm Master Password: {}", master_password);
-    std::io::stdout().flush().unwrap();
-    true
-}
-
 fn ask_root_dir_location() -> String {
     let mut root_dir = String::new();
     print!(
@@ -52,6 +45,17 @@ fn ask_master_password() -> String {
         }
     }
     master_password
+}
+
+#[allow(dead_code)]
+pub fn update_last_verified() {
+    let mut config = get_conf();
+    config["last_verified"] = serde_json::Value::String(
+        chrono::offset::Local::now()
+            .format("%Y-%b-%d %H:%M:%S")
+            .to_string(),
+    );
+    write_conf(config);
 }
 
 pub fn gen_conf() {
@@ -94,15 +98,37 @@ pub fn gen_conf() {
         .expect("Couldn't read input");
     let master_pass_auth = input.trim().to_lowercase() == "y";
     // println!("Noet: The master password is stored in the config file anyways ..... \n");
+    let created_time = chrono::offset::Local::now()
+        .format("%Y-%b-%d %H:%M:%S")
+        .to_string();
 
     let config = serde_json::json!({
         "master_password": master_password,
         "master_pass_auth": master_pass_auth,
-        "date_created": chrono::offset::Local::now().format("%Y-%b-%d %H:%M:%S").to_string(),
+        "date_created": created_time,
         "root_dir": root_dir,
         "master_pass_check": "TODO",
-        "last_used": "TODO"
+        "last_verified": created_time
     });
 
+    std::fs::write(config_path, config.to_string()).expect("Unable to write file");
+}
+
+pub fn get_conf() -> serde_json::Value {
+    let config_path = format!(
+        "{}/.rusty/.config.json",
+        home::home_dir().unwrap().display()
+    );
+    let config = std::fs::read_to_string(config_path).expect("Unable to read file");
+    let config: serde_json::Value = serde_json::from_str(&config).unwrap();
+    config
+}
+
+#[allow(dead_code)]
+pub fn write_conf(config: serde_json::Value) {
+    let config_path = format!(
+        "{}/.rusty/.config.json",
+        home::home_dir().unwrap().display()
+    );
     std::fs::write(config_path, config.to_string()).expect("Unable to write file");
 }
