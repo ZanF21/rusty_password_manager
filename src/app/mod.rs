@@ -1,7 +1,10 @@
 use clap::Parser;
 mod subcommands;
 use subcommands::{add, copy, create, show_all, Subcommands};
+
+use crate::auth;
 pub mod conf;
+pub mod encode;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -27,10 +30,17 @@ pub fn run() {
         Subcommands::Add {
             service_name,
             password,
-        } => add::add(service_name, password),
-
+        } => {
+            let enc_pass = encode::encrypt(password);
+            add::add(service_name, enc_pass);
+        }
         Subcommands::Copy { service_name } => {
-            copy::copy(service_name);
+            let (auth_done, _) = auth::auth_user();
+            if auth_done {
+                copy::copy(service_name, conf::get_conf());
+            } else {
+                println!("Authentication failed");
+            }
         }
         Subcommands::ShowAll => {
             show_all::show_all();
@@ -44,8 +54,7 @@ pub fn run() {
             length,
             exclude_similar,
         } => {
-            create::create(
-                service_name,
+            let gen_pass = create::create(
                 no_lowercase,
                 no_uppercase,
                 no_numbers,
@@ -53,6 +62,9 @@ pub fn run() {
                 length,
                 exclude_similar,
             );
+            let enc_pass = encode::encrypt(gen_pass);
+            add::add(service_name.clone(), enc_pass);
+            copy::copy(service_name, conf::get_conf());
         }
     }
 }

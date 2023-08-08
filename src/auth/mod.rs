@@ -10,10 +10,8 @@ fn verify_master_password() -> (bool, String) {
     (false, master_pass)
 }
 
-#[allow(dead_code)]
 pub fn auth_user() -> (bool, String) {
     let config = conf::get_conf();
-
     if config["master_pass_auth"].as_bool().unwrap() {
         // this does not work yet, will need to return master pass
         verify_master_password()

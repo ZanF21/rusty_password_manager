@@ -1,16 +1,13 @@
-use super::add;
-use super::copy;
 use passwords;
 
 pub fn create(
-    service_name: String,
     no_lowercase: bool,
     no_uppercase: bool,
     no_numbers: bool,
     no_symbols: bool,
     length: usize,
     exclude_similar: bool,
-) {
+) -> String {
     let password = passwords::PasswordGenerator::new()
         .exclude_similar_characters(exclude_similar)
         .length(length)
@@ -21,6 +18,5 @@ pub fn create(
         .generate_one()
         .unwrap();
 
-    add::add(service_name.clone(), password);
-    copy::copy(service_name);
+    password
 }

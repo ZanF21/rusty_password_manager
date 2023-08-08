@@ -8,7 +8,9 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.26"
 clap = { version = "4.3.16", features = ["derive"] }
+clipboard = "0.5.0"
 home = "0.5.5"
+magic-crypt = "3.1.12"
 passwords = "3.1.13"
 rpassword = "7.2.0"
 serde = { version = "1.0.104", features = ["derive"] }

@@ -3,7 +3,6 @@ pub mod add;
 pub mod common;
 pub mod copy;
 pub mod create;
-pub mod init;
 pub mod show_all;
 
 #[derive(Parser, Debug)]
