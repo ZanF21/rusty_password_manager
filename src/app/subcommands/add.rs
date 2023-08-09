@@ -23,8 +23,9 @@ pub fn add(service_name: String, password: String) {
             }
         }
     }
+
     let file_path = format!(
-        "{}/.rusty-pass-manager/{}",
+        "{}/.rusty/{}",
         home_dir().unwrap().display(),
         service_name.clone()
     );

@@ -2,12 +2,8 @@ use home::home_dir;
 use std::path::Path;
 
 /// Checks if password already exists
-pub fn already_exists(service_name: String) -> bool {
-    let file_path = format!(
-        "{}/.rusty-pass-manager/{}/password",
-        home_dir().unwrap().display(),
-        service_name
-    );
+pub fn already_exists(path: String) -> bool {
+    let file_path = format!("{}/.rusty/{}", home_dir().unwrap().display(), path);
     if Path::new(&file_path).exists() {
         return true;
     }

@@ -1,7 +1,7 @@
 use home::home_dir;
 
 pub fn show_all() {
-    let dir_path = format!("{}/.rusty-pass-manager", home_dir().unwrap().display());
+    let dir_path = format!("{}/.rusty", home_dir().unwrap().display());
     println!("Viewing all stored Passwords");
     std::process::Command::new("tree")
         .arg(".")

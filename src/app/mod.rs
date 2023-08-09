@@ -1,6 +1,6 @@
 use clap::Parser;
 mod subcommands;
-use subcommands::{add, copy, create, show_all, Subcommands};
+use subcommands::{add, common, copy, create, show_all, Subcommands};
 
 use crate::auth;
 pub mod conf;
@@ -31,10 +31,18 @@ pub fn run() {
             service_name,
             password,
         } => {
+            if !common::already_exists("".to_string()) {
+                println!("Init Not Done!! Try running `rusty init`");
+                return;
+            }
             let enc_pass = encode::encrypt(password);
             add::add(service_name, enc_pass);
         }
         Subcommands::Copy { service_name } => {
+            if !common::already_exists("".to_string()) {
+                println!("Init Not Done!! Try running `rusty init`");
+                return;
+            }
             let (auth_done, _) = auth::auth_user();
             if auth_done {
                 copy::copy(service_name, conf::get_conf());
@@ -43,6 +51,10 @@ pub fn run() {
             }
         }
         Subcommands::ShowAll => {
+            if !common::already_exists("".to_string()) {
+                println!("Init Not Done!! Try running `rusty init`");
+                return;
+            }
             show_all::show_all();
         }
         Subcommands::Create {
@@ -62,6 +74,10 @@ pub fn run() {
                 length,
                 exclude_similar,
             );
+            if !common::already_exists("".to_string()) {
+                println!("Init Not Done!! Try running `rusty init`");
+                return;
+            }
             let enc_pass = encode::encrypt(gen_pass);
             add::add(service_name.clone(), enc_pass);
             copy::copy(service_name, conf::get_conf());
