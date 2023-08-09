@@ -1,7 +1,7 @@
 cant be bothered now ..... will be a cli passmanager with
 - [ ] auto complete
 - [x] password gen (dk what algo ill use for that)
-- [ ] encryption (have started on that) (ssh ..... cause i dont like gpg)
+- [x] encryption (have started on that) (ssh ..... cause i dont like gpg)
 - [ ] easy sharing across devices (maybe)
 - [ ] colors ??? (a big maybe)
 
