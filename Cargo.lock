@@ -652,7 +652,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rusty_password_manager"
+name = "rusty"
 version = "0.2.0"
 dependencies = [
  "chrono",
