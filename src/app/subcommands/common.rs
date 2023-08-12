@@ -1,20 +1,21 @@
-use home::home_dir;
+use std::io::Write;
 use std::path::Path;
 
 /// Checks if password already exists
 pub fn already_exists(path: String) -> bool {
-    let file_path = format!("{}/.rusty/{}", home_dir().unwrap().display(), path);
-    if Path::new(&file_path).exists() {
+    if Path::new(&path).exists() {
         return true;
     }
     false
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test_already_exists() {
-        assert!(!already_exists("test".to_string()));
-    }
+/// Ask for password (visible on the tty)
+pub fn ask_password_print() -> String {
+    print!("Enter password: ");
+    std::io::stdout().flush().unwrap();
+    let mut password = String::new();
+    std::io::stdin()
+        .read_line(&mut password)
+        .expect("Couldn't read input");
+    password.trim().to_string()
 }

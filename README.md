@@ -43,8 +43,8 @@
     ```
 
 ### Upcoming Features
-- [ ] Edit Saved Passwords (you can technically do this by overwriting the old password)
-- [ ] Delete Saved Passwords
+- [x] Edit Saved Passwords (you can technically do this by overwriting the old password)
+- [x] Delete Saved Passwords
 - [ ] Auto Complete
 - [ ] A more secure way of encrypting the passwords 
 - [ ] Colors (maybe)

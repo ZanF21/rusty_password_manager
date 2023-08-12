@@ -3,6 +3,8 @@ pub mod add;
 pub mod common;
 pub mod copy;
 pub mod create;
+pub mod delete;
+pub mod edit;
 pub mod show_all;
 
 #[derive(Parser, Debug)]
@@ -14,12 +16,20 @@ pub enum Subcommands {
     Add {
         /// Name of the service the password is for
         service_name: String,
-        /// The Password
-        password: String,
     },
     /// Copies the password for a given service to the clipboard
     Copy {
         /// Name of the service that you want the password for
+        service_name: String,
+    },
+    /// Edit the password for a given service
+    Edit {
+        /// Name of the service that you want to edit the password for
+        service_name: String,
+    },
+    /// Delete the password for a given service
+    Delete {
+        /// Name of the service that you want to delete the password for
         service_name: String,
     },
 

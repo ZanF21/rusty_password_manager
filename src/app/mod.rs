@@ -1,6 +1,6 @@
 use clap::Parser;
 mod subcommands;
-use subcommands::{add, common, copy, create, show_all, Subcommands};
+use subcommands::{add, common, copy, create, delete, edit, show_all, Subcommands};
 
 use crate::auth;
 pub mod conf;
@@ -27,20 +27,24 @@ pub fn run() {
             conf::gen_conf();
         }
 
-        Subcommands::Add {
-            service_name,
-            password,
-        } => {
-            if !common::already_exists("".to_string()) {
-                println!("Init Not Done!! Try running `rusty init`");
+        Subcommands::Add { service_name } => {
+            if !common::already_exists(format!(
+                "{}/.rusty/.config.json",
+                std::env::var("HOME").unwrap()
+            )) {
+                println!("Init Not Done!!\nTry running `rusty init`");
                 return;
             }
+            let password = common::ask_password_print();
             let enc_pass = encode::encrypt(password);
-            add::add(service_name, enc_pass);
+            add::add(service_name, enc_pass, None);
         }
         Subcommands::Copy { service_name } => {
-            if !common::already_exists("".to_string()) {
-                println!("Init Not Done!! Try running `rusty init`");
+            if !common::already_exists(format!(
+                "{}/.rusty/.config.json",
+                std::env::var("HOME").unwrap()
+            )) {
+                println!("Init Not Done!!\nTry running `rusty init`");
                 return;
             }
             let (auth_done, _) = auth::auth_user();
@@ -51,8 +55,11 @@ pub fn run() {
             }
         }
         Subcommands::ShowAll => {
-            if !common::already_exists("".to_string()) {
-                println!("Init Not Done!! Try running `rusty init`");
+            if !common::already_exists(format!(
+                "{}/.rusty/.config.json",
+                std::env::var("HOME").unwrap()
+            )) {
+                println!("Init Not Done!!\nTry running `rusty init`");
                 return;
             }
             show_all::show_all();
@@ -74,13 +81,30 @@ pub fn run() {
                 length,
                 exclude_similar,
             );
-            if !common::already_exists("".to_string()) {
-                println!("Init Not Done!! Try running `rusty init`");
+            if !common::already_exists(format!(
+                "{}/.rusty/.config.json",
+                std::env::var("HOME").unwrap()
+            )) {
+                println!("Init Not Done!!\nTry running `rusty init`");
                 return;
             }
             let enc_pass = encode::encrypt(gen_pass);
-            add::add(service_name.clone(), enc_pass);
+            add::add(service_name.clone(), enc_pass, None);
             copy::copy(service_name, conf::get_conf());
         }
+        Subcommands::Edit { service_name } => {
+            let password = common::ask_password_print();
+            let enc_pass = encode::encrypt(password);
+            edit::edit(service_name, enc_pass);
+        }
+        Subcommands::Delete { service_name } => {
+            delete::delete(service_name);
+        }
     }
+}
+
+#[test]
+fn verify_rusty() {
+    use clap::CommandFactory;
+    Rusty::command().debug_assert()
 }

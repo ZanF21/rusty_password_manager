@@ -12,7 +12,7 @@ fn verify_master_password() -> (bool, String) {
 
 pub fn auth_user() -> (bool, String) {
     let config = conf::get_conf();
-    if config["master_pass_auth"].as_bool().unwrap() {
+    if config["always_ask_password"].as_bool().unwrap() {
         // this does not work yet, will need to return master pass
         verify_master_password()
     } else {

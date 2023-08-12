@@ -96,7 +96,7 @@ pub fn gen_conf() {
     std::io::stdin()
         .read_line(&mut input)
         .expect("Couldn't read input");
-    let master_pass_auth = input.trim().to_lowercase() == "y";
+    let always_ask_password = input.trim().to_lowercase() == "y";
     // println!("Noet: The master password is stored in the config file anyways ..... \n");
     let created_time = chrono::offset::Local::now()
         .format("%Y-%b-%d %H:%M:%S")
@@ -104,7 +104,7 @@ pub fn gen_conf() {
 
     let config = serde_json::json!({
         "master_password": master_password,
-        "master_pass_auth": master_pass_auth,
+        "always_ask_password": always_ask_password,
         "date_created": created_time,
         "root_dir": root_dir,
         "master_pass_check": "TODO",
