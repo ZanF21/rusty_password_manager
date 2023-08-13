@@ -6,7 +6,7 @@
 - `rust 1.71.1` ( including `cargo` )
 - `tree v2.0.2`
 - `xclip 0.13`
-- an Arch linux user ( ***I use arch btw*** )
+- an Arch linux user ( ***I use arch btw*** ) ( **jk** )
 
 ## Installation
 1. Clone the repo
