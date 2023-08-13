@@ -47,12 +47,8 @@ pub fn run() {
                 println!("Init Not Done!!\nTry running `rusty init`");
                 return;
             }
-            let (auth_done, _) = auth::auth_user();
-            if auth_done {
-                copy::copy(service_name, conf::get_conf());
-            } else {
-                println!("Authentication failed");
-            }
+            auth::auth_user();
+            copy::copy(service_name, conf::get_conf());
         }
         Subcommands::ShowAll => {
             if !common::already_exists(format!(
@@ -93,11 +89,13 @@ pub fn run() {
             copy::copy(service_name, conf::get_conf());
         }
         Subcommands::Edit { service_name } => {
+            auth::auth_user();
             let password = common::ask_password_print();
             let enc_pass = encode::encrypt(password);
             edit::edit(service_name, enc_pass);
         }
         Subcommands::Delete { service_name } => {
+            auth::auth_user();
             delete::delete(service_name);
         }
     }

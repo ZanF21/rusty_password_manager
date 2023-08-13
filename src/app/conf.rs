@@ -1,5 +1,6 @@
 use chrono;
 use home;
+use magic_crypt::MagicCryptTrait;
 use rpassword;
 use serde_json;
 use std::io::Write;
@@ -89,15 +90,24 @@ pub fn gen_conf() {
 
     let root_dir = ask_root_dir_location();
     let master_password = ask_master_password();
+    let mut always_ask_password = false;
+    loop {
+        print!("Use Master Password to authenticate every single time? (y/N): ");
+        std::io::stdout().flush().unwrap();
+        let mut input = String::new();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Couldn't read input");
+        if input.trim().to_lowercase() == "y" {
+            always_ask_password = true;
+            break;
+        } else if input.trim().to_lowercase() == "n" || input.trim() == "" {
+            break;
+        }
+    }
+    let mcrypt = new_magic_crypt!(master_password.clone(), 256);
+    let pass_phrase_hash = mcrypt.encrypt_str_to_base64("rizan did a great job making `rusty`");
 
-    print!("Use Master Password to authenticate every single time? (y/N): ");
-    std::io::stdout().flush().unwrap();
-    let mut input = String::new();
-    std::io::stdin()
-        .read_line(&mut input)
-        .expect("Couldn't read input");
-    let always_ask_password = input.trim().to_lowercase() == "y";
-    // println!("Noet: The master password is stored in the config file anyways ..... \n");
     let created_time = chrono::offset::Local::now()
         .format("%Y-%b-%d %H:%M:%S")
         .to_string();
@@ -107,7 +117,7 @@ pub fn gen_conf() {
         "always_ask_password": always_ask_password,
         "date_created": created_time,
         "root_dir": root_dir,
-        "master_pass_check": "TODO",
+        "master_pass_check": pass_phrase_hash,
         "last_verified": created_time
     });
 
@@ -124,7 +134,6 @@ pub fn get_conf() -> serde_json::Value {
     config
 }
 
-#[allow(dead_code)]
 pub fn write_conf(config: serde_json::Value) {
     let config_path = format!(
         "{}/.rusty/.config.json",

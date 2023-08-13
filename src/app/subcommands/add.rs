@@ -19,6 +19,7 @@ pub fn add(service_name: String, password: String, force_edit: Option<bool>) {
         update = true;
     } else if common::already_exists(format!("{}/{}/password", root_dir, service_name.clone())) {
         println!("Password for {} already exists", service_name);
+        super::super::auth::auth_user();
         loop {
             print!("Do you want to overwrite it? (y/N): ");
             std::io::stdout().flush().unwrap();
